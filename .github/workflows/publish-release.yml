@@ -1,0 +1,92 @@
+name: Publish GitHub release
+
+on:
+  workflow_dispatch:
+    inputs:
+      app_version:
+        description: 'App version: v*.*.*'
+        default: 'v*.*.*'
+        required: true
+      release_name:
+        description: 'Name which will show in release'
+        required: true
+      release_draft:
+        description: 'Would it be a draft release?'
+        type: boolean
+        required: true
+        default: true
+
+env:
+  ACALA_PROD_AUTH_TOKEN: ${{ secrets.ACALA_PROD_AUTH_TOKEN }}
+  ACALA_TEST_AUTH_TOKEN: ${{ secrets.ACALA_TEST_AUTH_TOKEN }}
+  MOONBEAM_PROD_AUTH_TOKEN: ${{ secrets.MOONBEAM_PROD_AUTH_TOKEN }}
+  MOONBEAM_TEST_AUTH_TOKEN: ${{ secrets.MOONBEAM_TEST_AUTH_TOKEN }}
+  MOONPAY_PRODUCTION_SECRET: ${{ secrets.MOONPAY_PRODUCTION_SECRET }}
+  MOONPAY_TEST_SECRET: ${{ secrets.MOONPAY_TEST_SECRET }}
+
+  CI_KEYSTORE_PASS: ${{ secrets.CI_GITHUB_KEYSTORE_PASS }}
+  CI_KEYSTORE_KEY_ALIAS: ${{ secrets.CI_GITHUB_KEYSTORE_KEY_ALIAS }}
+  CI_KEYSTORE_KEY_PASS: ${{ secrets.CI_GITHUB_KEYSTORE_KEY_PASS }}
+
+
+jobs:
+
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Check out
+        uses: actions/checkout@master
+        with:
+          repository: nova-wallet/nova-wallet-android
+          ref: 'develop'
+          token: ${{ secrets.PAT }}
+
+      - name: 🔧 Install dependencies
+        uses: ./.github/workflows/install/
+
+      - name: Run tests
+        run: ./gradlew runTest
+
+      - name: Build with Gradle
+        run: ./gradlew assembleReleaseGithub
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: apk
+          path: app/build/outputs/apk/releaseGithub/
+
+  create-release:
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          repository: ${{ env.release_repo }}
+          persist-credentials: false
+          fetch-depth: 0
+
+      - uses: rickstaa/action-create-tag@v1
+        with:
+          tag: ${{ github.event.inputs.app_version }}
+          message: ${{ github.event.inputs.release_name }}
+
+      - name: Download built artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: apk
+          path: app
+
+      - name: Rename artifacts
+        run: mv app/app-releaseGithub.apk app/nova-wallet-android-${{ github.event.inputs.app_version }}-github.apk
+
+      - name: Create Release
+        id: create_release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ github.event.inputs.app_version }}
+          name: ${{ github.event.inputs.release_name }}
+          draft: ${{ github.event.inputs.release_draft }}
+          files: app/nova-wallet-android-${{ github.event.inputs.app_version }}-github.apk
