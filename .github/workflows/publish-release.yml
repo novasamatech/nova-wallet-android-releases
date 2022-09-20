@@ -46,6 +46,14 @@ jobs:
       - name: 🔧 Install dependencies
         uses: ./.github/workflows/install/
 
+      - name: Get sign key
+        id: write_file
+        uses: timheuer/base64-to-file@v1.1
+        with:
+          fileName: 'github_key.jks'
+          fileDir: './app/'
+          encodedString: ${{ secrets.RELEASE_GITHUB_KEY_FILE }}
+
       - name: Run tests
         run: ./gradlew runTest
 
