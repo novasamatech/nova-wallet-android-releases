@@ -63,10 +63,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-        with:
-          repository: ${{ env.release_repo }}
-          persist-credentials: false
-          fetch-depth: 0
 
       - uses: rickstaa/action-create-tag@v1
         with:
