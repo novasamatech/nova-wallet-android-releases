@@ -7,6 +7,10 @@ on:
         description: 'App version: v*.*.*'
         default: 'v*.*.*'
         required: true
+      release_branch:
+        description: 'Branch from which release will be created'
+        default: 'develop'
+        required: true
       release_name:
         description: 'Name which will show in release'
         required: true
@@ -40,7 +44,7 @@ jobs:
         uses: actions/checkout@master
         with:
           repository: nova-wallet/nova-wallet-android
-          ref: 'develop'
+          ref: ${{ github.event.inputs.release_branch }}
           token: ${{ secrets.PAT }}
 
       - name: 🔧 Install dependencies
