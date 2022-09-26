@@ -19,13 +19,15 @@ on:
         type: boolean
         required: true
         default: true
+  pull_request:
+
 
 
 jobs:
   build:
     uses: nova-wallet/nova-wallet-android/.github/workflows/android_build.yml@develop
     with:
-      branch: ${{ github.event.inputs.release_branch }}
+      branch: master
       gradlew-command: assembleReleaseGithub
       keystore-file-name: github_key.jks
       keystore-file-base64: ${{ secrets.BASE64_GITHUB_KEYSTORE_FILE }}
@@ -40,8 +42,8 @@ jobs:
 
       - uses: rickstaa/action-create-tag@v1
         with:
-          tag: ${{ github.event.inputs.app_version }}
-          message: ${{ github.event.inputs.release_name }}
+          tag: v3.8.1
+          message: Release v3.8.1
 
       - name: Download built artifact
         uses: actions/download-artifact@v2
@@ -50,13 +52,13 @@ jobs:
           path: app
 
       - name: Rename artifacts
-        run: mv app/releaseGithub/app-releaseGithub.apk app/releaseGithub/nova-wallet-android-${{ github.event.inputs.app_version }}-github.apk
+        run: mv app/releaseGithub/app-releaseGithub.apk app/releaseGithub/nova-wallet-android-v3.8.1-github.apk
 
       - name: Create Release
         id: create_release
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: ${{ github.event.inputs.app_version }}
-          name: ${{ github.event.inputs.release_name }}
-          draft: ${{ github.event.inputs.release_draft }}
-          files: app/releaseGithub/nova-wallet-android-${{ github.event.inputs.app_version }}-github.apk
+          tag_name: v3.8.1
+          name: Release v3.8.1
+          draft: true
+          files: app/releaseGithub/nova-wallet-android-v3.8.1-github.apk
