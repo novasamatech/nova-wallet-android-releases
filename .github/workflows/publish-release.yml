@@ -20,54 +20,16 @@ on:
         required: true
         default: true
 
-env:
-  ACALA_PROD_AUTH_TOKEN: ${{ secrets.ACALA_PROD_AUTH_TOKEN }}
-  ACALA_TEST_AUTH_TOKEN: ${{ secrets.ACALA_TEST_AUTH_TOKEN }}
-  MOONBEAM_PROD_AUTH_TOKEN: ${{ secrets.MOONBEAM_PROD_AUTH_TOKEN }}
-  MOONBEAM_TEST_AUTH_TOKEN: ${{ secrets.MOONBEAM_TEST_AUTH_TOKEN }}
-  MOONPAY_PRODUCTION_SECRET: ${{ secrets.MOONPAY_PRODUCTION_SECRET }}
-  MOONPAY_TEST_SECRET: ${{ secrets.MOONPAY_TEST_SECRET }}
-
-  CI_GITHUB_KEYSTORE_PASS: ${{ secrets.CI_GITHUB_KEYSTORE_PASS }}
-  CI_GITHUB_KEYSTORE_KEY_ALIAS: ${{ secrets.CI_GITHUB_KEYSTORE_KEY_ALIAS }}
-  CI_GITHUB_KEYSTORE_KEY_PASS: ${{ secrets.CI_GITHUB_KEYSTORE_KEY_PASS }}
-
 
 jobs:
-
   build:
-    runs-on: ubuntu-latest
-    timeout-minutes: 30
-
-    steps:
-      - name: Check out
-        uses: actions/checkout@master
-        with:
-          repository: nova-wallet/nova-wallet-android
-          ref: ${{ github.event.inputs.release_branch }}
-          token: ${{ secrets.PAT }}
-
-      - name: 🔧 Install dependencies
-        uses: ./.github/workflows/install/
-
-      - name: Get sign key
-        id: write_file
-        uses: timheuer/base64-to-file@v1.1
-        with:
-          fileName: 'github_key.jks'
-          fileDir: './app/'
-          encodedString: ${{ secrets.RELEASE_GITHUB_KEY_FILE }}
-
-      - name: Run tests
-        run: ./gradlew runTest
-
-      - name: Build with Gradle
-        run: ./gradlew assembleReleaseGithub
-
-      - uses: actions/upload-artifact@v2
-        with:
-          name: apk
-          path: app/build/outputs/apk/releaseGithub/
+    uses: nova-wallet/nova-wallet-android/.github/workflows/android_build.yml@develop
+    with:
+      branch: ${{ github.event.inputs.release_branch }}
+      gradlew-command: assembleReleaseGithub
+      keystore-file-name: github_key.jks
+      keystore-file-base64: ${{ secrets.BASE64_GITHUB_KEYSTORE_FILE }}
+    secrets: inherit
 
   create-release:
     runs-on: ubuntu-latest
@@ -88,7 +50,7 @@ jobs:
           path: app
 
       - name: Rename artifacts
-        run: mv app/app-releaseGithub.apk app/nova-wallet-android-${{ github.event.inputs.app_version }}-github.apk
+        run: mv app/releaseGithub/app-releaseGithub.apk app/releaseGithub/nova-wallet-android-${{ github.event.inputs.app_version }}-github.apk
 
       - name: Create Release
         id: create_release
@@ -97,4 +59,4 @@ jobs:
           tag_name: ${{ github.event.inputs.app_version }}
           name: ${{ github.event.inputs.release_name }}
           draft: ${{ github.event.inputs.release_draft }}
-          files: app/nova-wallet-android-${{ github.event.inputs.app_version }}-github.apk
+          files: app/releaseGithub/nova-wallet-android-${{ github.event.inputs.app_version }}-github.apk
