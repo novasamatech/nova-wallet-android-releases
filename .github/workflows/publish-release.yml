@@ -1,0 +1,63 @@
+name: Publish GitHub release
+
+on:
+  workflow_dispatch:
+    inputs:
+      app_version:
+        description: 'App version: v*.*.*'
+        default: 'v*.*.*'
+        required: true
+      release_branch:
+        description: 'Branch from which release will be created'
+        default: 'develop'
+        required: true
+      release_name:
+        description: 'Name which will show in release'
+        required: true
+      release_draft:
+        description: 'Would it be a draft release?'
+        type: boolean
+        required: true
+        default: true
+  pull_request:
+
+
+
+jobs:
+  build:
+    uses: nova-wallet/test-runner/.github/workflows/build_android_app.yml@master
+    with:
+      branch: master
+      gradlew-command: assembleReleaseGithub
+      keystore-file-name: github_key.jks
+    secrets: inherit
+
+  create-release:
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: rickstaa/action-create-tag@v1
+        with:
+          tag: v3.8.1
+          message: Release v3.8.1
+
+      - name: Download built artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: apk
+          path: app
+
+      - name: Rename artifacts
+        run: mv app/releaseGithub/app-releaseGithub.apk app/releaseGithub/nova-wallet-android-v3.8.1-github.apk
+
+      - name: Create Release
+        id: create_release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: v3.8.1
+          name: Release v3.8.1
+          draft: true
+          files: app/releaseGithub/nova-wallet-android-v3.8.1-github.apk
