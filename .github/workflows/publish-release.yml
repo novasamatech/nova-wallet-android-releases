@@ -9,7 +9,7 @@ on:
         required: true
       release_branch:
         description: 'Branch from which release will be created'
-        default: 'develop'
+        default: 'master'
         required: true
       release_name:
         description: 'Name which will show in release'
