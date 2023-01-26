@@ -6,12 +6,12 @@
     },
     {
         "version": "5.2.1",
-        "severity": "Major",
+        "severity": "Normal",
         "time": "2022-12-22T06:46:07Z"
     },
     {
         "version": "5.3.0",
-        "severity": "Critical",
+        "severity": "Normal",
         "time": "2023-01-19T06:46:07Z"
     }
 ]
