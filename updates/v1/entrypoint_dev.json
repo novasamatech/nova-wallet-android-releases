@@ -3,5 +3,10 @@
         "version": "5.2.0",
         "severity": "Normal",
         "time": "2022-12-01T06:46:07Z"
+    },
+    {
+        "version": "5.2.1",
+        "severity": "Major",
+        "time": "2022-12-22T06:46:07Z"
     }
 ]
