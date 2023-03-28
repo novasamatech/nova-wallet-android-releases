@@ -8,5 +8,10 @@
         "version": "5.4.0",
         "severity": "Critical",
         "time": "2023-03-15T12:00:00Z"
+    },
+    {
+        "version": "6.0.0",
+        "severity": "Major",
+        "time": "2023-03-28T12:00:00Z"
     }
 ]
