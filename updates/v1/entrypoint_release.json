@@ -83,5 +83,10 @@
         "version": "6.5.3",
         "severity": "Critical",
         "time": "2023-06-29T12:00:00Z"
+    },
+    {
+        "version": "6.6.0",
+        "severity": "Major",
+        "time": "2023-07-11T12:00:00Z"
     }
 ]
