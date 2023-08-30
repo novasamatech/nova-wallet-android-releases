@@ -1,0 +1,52 @@
+name: Update changelog
+
+on:
+  repository_dispatch:
+    types: [my-event]
+
+jobs:
+  parse-data:
+    runs-on: ubuntu-latest
+    outputs:
+      data_to_update: ${{ steps.parsed_data.outputs.data_json }}
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Parse data to JSON
+        id: parsed_data
+        run: echo "data_json=${{ github.event.client_payload.sha }}" >> $GITHUB_OUTPUT
+
+  update-xcm:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Make Pull Request
+        uses: ./.github/workflows/make-pull-request
+        with:
+          commit-files: ${{ env.COMMIT_FILE }}
+          commit-message: Update xcm coefficients
+          app-id: ${{ secrets.PR_APP_ID}}
+          app-token: ${{ secrets.PR_APP_TOKEN}}
+          pr-reviewer: ${{ env.PR_REVIEWER }}
+          branch-name: update-xcm-coefficients
+          pr-title: 🆙 Update XCM coefficients for ${{ env.ENVIRONMENT }} env
+          pr-body: This PR was generated automatically 🤖
+          pr-base: master
+
+  alert:
+    runs-on: ubuntu-latest
+    needs: [parse-data, update-xcm]
+    if: always() && (needs.parse-data.result == 'failure')
+    env:
+      GITHUB_WORKFLOW_URL: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+    steps:
+      - name: Report
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_TO }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          message: |
+            XCM update workflow failed, lets check:
+
+            Failed run:
+            ${{ env.GITHUB_WORKFLOW_URL }}
