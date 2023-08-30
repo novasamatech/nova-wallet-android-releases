@@ -2,7 +2,7 @@ name: Update changelog
 
 on:
   repository_dispatch:
-    types: [my-event]
+    types: [create-pr]
 
 jobs:
   parse-data:
