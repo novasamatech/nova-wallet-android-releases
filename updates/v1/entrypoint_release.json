@@ -113,5 +113,10 @@
         "version": "7.0.0",
         "severity": "Major",
         "time": "2023-09-14T12:00:00Z"
+    },
+    {
+        "version": "7.0.1",
+        "severity": "Major",
+        "time": "2023-09-14T14:00:00Z"
     }
 ]
