@@ -15,14 +15,13 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-
       - name: Payload extraction
         id: payload
         run: |
-          echo "VERSION=${{ fromJSON(github.event.client_payload).version }}" >> $GITHUB_ENV
-          echo "COMMENT_LINK=${{ fromJSON(github.event.client_payload).comment_link }}" >> $GITHUB_ENV
-          echo "TIME=${{ fromJSON(github.event.client_payload).time }}" >> $GITHUB_ENV
-          echo "SEVERITY=${{ fromJSON(github.event.client_payload).severity }}" >> $GITHUB_ENV
+          echo "VERSION=${{ github.event.client_payload.version }}" >> $GITHUB_ENV
+          echo "COMMENT_LINK=${{ github.event.client_payload.comment_link }}" >> $GITHUB_ENV
+          echo "TIME=${{ github.event.client_payload.time }}" >> $GITHUB_ENV
+          echo "SEVERITY=${{ github.event.client_payload.severity }}" >> $GITHUB_ENV
       
       - name: Fetch comment body and save to file
         run: |
@@ -49,9 +48,6 @@ jobs:
   alert:
     runs-on: ubuntu-latest
     needs: [create-pr-to-update]
-    if: always()
-    env:
-      GITHUB_WORKFLOW_URL: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
     steps:
       - name: Report
         uses: appleboy/telegram-action@master
