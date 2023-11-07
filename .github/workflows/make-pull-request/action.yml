@@ -40,6 +40,7 @@ runs:
         private_key: ${{ inputs.app-token }}
 
     - name: Create Pull Request
+      id: create_pr
       uses: peter-evans/create-pull-request@v5
       with:
         token: ${{ steps.generate-token.outputs.token }}
@@ -55,3 +56,6 @@ runs:
         reviewers: ${{ inputs.pr-reviewer }}
         draft: false
         base: ${{ inputs.pr-base }}
+
+outputs:
+  pull-request-url: ${{ steps.create_pr.outputs.pull-request-url }}

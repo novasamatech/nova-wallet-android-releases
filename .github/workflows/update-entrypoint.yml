@@ -4,39 +4,52 @@ on:
   repository_dispatch:
     types: [create-pr]
 
+env:
+  PR_REVIEWER: ERussel,leohar,valentunn,stepanLav
+
 jobs:
-  parse-data:
+  create-pr-to-update:
     runs-on: ubuntu-latest
     outputs:
-      data_to_update: ${{ steps.parsed_data.outputs.data_json }}
+      pr-url: ${{ steps.pr.outputs.pull-request-url }}
 
     steps:
-      - uses: actions/checkout@v3
-      - name: Parse data to JSON
-        id: parsed_data
-        run: echo "data_json=${{ github.event.client_payload.sha }}" >> $GITHUB_OUTPUT
+      - uses: actions/checkout@v4
 
-  update-xcm:
-    runs-on: ubuntu-latest
+      - name: Payload extraction
+        id: payload
+        run: |
+          echo "VERSION=${{ fromJSON(github.event.client_payload).version }}" >> $GITHUB_ENV
+          echo "COMMENT_LINK=${{ fromJSON(github.event.client_payload).comment_link }}" >> $GITHUB_ENV
+          echo "TIME=${{ fromJSON(github.event.client_payload).time }}" >> $GITHUB_ENV
+          echo "SEVERITY=${{ fromJSON(github.event.client_payload).severity }}" >> $GITHUB_ENV
+      
+      - name: Fetch comment body and save to file
+        run: |
+          COMMENT_BODY=$(curl -s "${{ steps.payload.outputs.COMMENT_LINK }}")
+          echo "$COMMENT_BODY" > updates/changelogs/release/${{ steps.payload.outputs.VERSION }}.md
+        
+      - name: Update entrypoint_release
+        run: python scripts/version_updater.py ${{ steps.payload.outputs.VERSION }} ${{ steps.payload.outputs.TIME }} ${{ steps.payload.outputs.SEVERITY }}
 
-    steps:
       - name: Make Pull Request
+        id: pr
         uses: ./.github/workflows/make-pull-request
         with:
-          commit-files: ${{ env.COMMIT_FILE }}
-          commit-message: Update xcm coefficients
+          commit-files: ./
+          commit-message: Create release notes for ${{ steps.payload.outputs.VERSION }}
           app-id: ${{ secrets.PR_APP_ID}}
           app-token: ${{ secrets.PR_APP_TOKEN}}
           pr-reviewer: ${{ env.PR_REVIEWER }}
-          branch-name: update-xcm-coefficients
-          pr-title: 🆙 Update XCM coefficients for ${{ env.ENVIRONMENT }} env
+          branch-name: release-notes-${{ steps.payload.outputs.VERSION }}
+          pr-title: 🚀 Release notes for ${{ steps.payload.outputs.VERSION }}
           pr-body: This PR was generated automatically 🤖
           pr-base: master
 
   alert:
     runs-on: ubuntu-latest
-    needs: [parse-data, update-xcm]
-    if: always() && (needs.parse-data.result == 'failure')
+    needs: [create-pr-to-update]
+    if: always()
     env:
       GITHUB_WORKFLOW_URL: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
     steps:
@@ -46,7 +59,7 @@ jobs:
           to: ${{ secrets.TELEGRAM_TO }}
           token: ${{ secrets.TELEGRAM_TOKEN }}
           message: |
-            XCM update workflow failed, lets check:
+            🚀 New Android release notes have been created, please check them out:
 
-            Failed run:
-            ${{ env.GITHUB_WORKFLOW_URL }}
+            PR:
+            ${{ needs.create-pr-to-update.outputs.pr-url }}
