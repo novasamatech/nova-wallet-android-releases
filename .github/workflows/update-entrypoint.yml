@@ -25,24 +25,24 @@ jobs:
       
       - name: Fetch comment body and save to file
         run: |
-          COMMENT_BODY=$(curl --location '${{ steps.payload.outputs.COMMENT_LINK }}' | jq -r '.body' | sed 's/Release notes:\\r\\n//g')
+          COMMENT_BODY=$(curl --location '${{ env.COMMENT_LINK }}' | jq -r '.body' | sed 's/Release notes:\\r\\n//g')
 
-          echo "$COMMENT_BODY" > updates/changelogs/release/${{ steps.payload.outputs.VERSION }}.md
+          echo "$COMMENT_BODY" > updates/changelogs/release/${{ env.VERSION }}.md
         
       - name: Update entrypoint_release
-        run: python scripts/version_updater.py ${{ steps.payload.outputs.VERSION }} ${{ steps.payload.outputs.TIME }} ${{ steps.payload.outputs.SEVERITY }}
+        run: python scripts/version_updater.py ${{ env.VERSION }} ${{ env.TIME }} ${{ env.SEVERITY }}
 
       - name: Make Pull Request
         id: pr
         uses: ./.github/workflows/make-pull-request
         with:
           commit-files: ./
-          commit-message: Create release notes for ${{ steps.payload.outputs.VERSION }}
+          commit-message: Create release notes for ${{ env.VERSION }}
           app-id: ${{ secrets.PR_APP_ID}}
           app-token: ${{ secrets.PR_APP_TOKEN}}
           pr-reviewer: ${{ env.PR_REVIEWER }}
-          branch-name: release-notes-${{ steps.payload.outputs.VERSION }}
-          pr-title: 🚀 Release notes for ${{ steps.payload.outputs.VERSION }}
+          branch-name: release-notes-${{ env.VERSION }}
+          pr-title: 🚀 Release notes for ${{ env.VERSION }}
           pr-body: This PR was generated automatically 🤖
           pr-base: master
 
