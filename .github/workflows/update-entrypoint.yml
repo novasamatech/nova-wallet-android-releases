@@ -25,7 +25,8 @@ jobs:
       
       - name: Fetch comment body and save to file
         run: |
-          COMMENT_BODY=$(curl -s "${{ steps.payload.outputs.COMMENT_LINK }}")
+          COMMENT_BODY=$(curl --location '${{ steps.payload.outputs.COMMENT_LINK }}' | jq -r '.body' | sed 's/Release notes:\\r\\n//g')
+
           echo "$COMMENT_BODY" > updates/changelogs/release/${{ steps.payload.outputs.VERSION }}.md
         
       - name: Update entrypoint_release
