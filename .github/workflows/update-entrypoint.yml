@@ -11,7 +11,7 @@ jobs:
   create-pr-to-update:
     runs-on: ubuntu-latest
     outputs:
-      pr-url: ${{ steps.pr.outputs.pull-request-url }}
+      pr-url: ${{ steps.get_pr_url.outputs.pr-url }}
 
     steps:
       - uses: actions/checkout@v4
@@ -45,6 +45,11 @@ jobs:
           pr-title: 🚀 Release notes for ${{ env.VERSION }}
           pr-body: This PR was generated automatically 🤖
           pr-base: master
+      
+      - name: Get the pull request URL
+        id: get_pr_url
+        run: |
+          echo "::set-output name=pr-url::$(cat pr_url.txt)"
 
   alert:
     runs-on: ubuntu-latest
