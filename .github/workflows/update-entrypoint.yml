@@ -44,7 +44,7 @@ jobs:
           branch-name: release-notes-${{ env.VERSION }}
           pr-title: 🚀 Release notes for ${{ env.VERSION }}
           pr-body: This PR was generated automatically 🤖
-          pr-base: master
+          pr-base: main
       
       - name: Get the pull request URL
         id: get_pr_url
