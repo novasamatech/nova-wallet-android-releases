@@ -20,14 +20,13 @@ def update_json(version, time, severity):
         data = json.load(f)
 
     # Create the new payload
-    payload = {"version": version, "time": time, "severity": severity}
+    payload = {"version": version, "severity": severity, "time": time}
 
     # Check if the version already exists in the data
     for item in data:
         if item["version"] == version:
-            # Update the existing entry
-            item["time"] = time
             item["severity"] = severity
+            item["time"] = time
             break
     else:
         # Add the new payload if the version was not found
