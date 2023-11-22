@@ -28,10 +28,10 @@ jobs:
         run: make install
       
       - name: Fetch comment body and save to file
-        run: python scripts/fetch_comment_body.py ${{ env.COMMENT_LINK }} ${{ env.VERSION }}
+        run: make fetch-comment COMMENT_LINK=${{ env.COMMENT_LINK }} VERSION=${{ env.VERSION }}
         
       - name: Update entrypoint_release
-        run: python scripts/version_updater.py ${{ env.VERSION }} ${{ env.TIME }} ${{ env.SEVERITY }}
+        run: make update-version VERSION=${{ env.VERSION }} TIME=${{ env.TIME }} SEVERITY=${{ env.SEVERITY }}
 
       - name: Make Pull Request
         id: pr

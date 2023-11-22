@@ -1,6 +1,8 @@
 [tool.poetry]
 name = "nova-wallet-android-releases"
 version = "0.1.0"
+description = "This repository contains release notes and versions mapping for in-app updates"
+authors = ["Novasama Technologies <support@novawallet.io>"]
 license = "Apache 2.0"
 readme = "README.md"
 
