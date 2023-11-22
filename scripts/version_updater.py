@@ -11,31 +11,33 @@ Example:
 import argparse
 import json
 
-RELEASE_FILE_PATH = 'updates/v1/entrypoint_release.json'
+RELEASE_FILE_PATH = "updates/v1/entrypoint_release.json"
+
 
 def update_json(version, time, severity):
     # Load the existing data
-    with open(RELEASE_FILE_PATH, 'r') as f:
+    with open(RELEASE_FILE_PATH, "r") as f:
         data = json.load(f)
 
     # Create the new payload
-    payload = {'version': version, 'time': time, 'severity': severity}
+    payload = {"version": version, "time": time, "severity": severity}
 
     # Check if the version already exists in the data
     for item in data:
-        if item['version'] == version:
+        if item["version"] == version:
             # Update the existing entry
-            item['time'] = time
-            item['severity'] = severity
+            item["time"] = time
+            item["severity"] = severity
             break
     else:
         # Add the new payload if the version was not found
         data.append(payload)
 
     # Save the updated data
-    with open(RELEASE_FILE_PATH, 'w') as f:
+    with open(RELEASE_FILE_PATH, "w") as f:
         json.dump(data, f, indent=4)
-        f.write('\n')
+        f.write("\n")
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()

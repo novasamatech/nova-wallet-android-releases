@@ -20,14 +20,15 @@ jobs:
         run: |
           echo "VERSION=${{ github.event.client_payload.version }}" >> $GITHUB_ENV
           echo "COMMENT_LINK=${{ github.event.client_payload.comment_link }}" >> $GITHUB_ENV
+          echo "PR-URL=${{ github.event.client_payload.pr-url }}" >> $GITHUB_ENV
           echo "TIME=${{ github.event.client_payload.time }}" >> $GITHUB_ENV
           echo "SEVERITY=${{ github.event.client_payload.severity }}" >> $GITHUB_ENV
       
+      - name: Install dependencies
+        run: make install
+      
       - name: Fetch comment body and save to file
-        run: |
-          COMMENT_BODY=$(curl --location '${{ env.COMMENT_LINK }}' | jq -r '.body' | sed 's/Release notes:\\r\\n//g')
-
-          echo "$COMMENT_BODY" > updates/changelogs/release/${{ env.VERSION }}.md
+        run: python scripts/fetch_comment_body.py ${{ env.COMMENT_LINK }} ${{ env.VERSION }}
         
       - name: Update entrypoint_release
         run: python scripts/version_updater.py ${{ env.VERSION }} ${{ env.TIME }} ${{ env.SEVERITY }}
@@ -43,7 +44,9 @@ jobs:
           pr-reviewer: ${{ env.PR_REVIEWER }}
           branch-name: release-notes-${{ env.VERSION }}
           pr-title: 🚀 Release notes for ${{ env.VERSION }}
-          pr-body: This PR was generated automatically 🤖
+          pr-body: |
+            This PR was generated automatically 🤖
+            ${{ env.PR-URL }}
           pr-base: main
       
       - name: Get the pull request URL
@@ -51,17 +54,17 @@ jobs:
         run: |
           echo "::set-output name=pr-url::$(cat pr_url.txt)"
 
-  alert:
-    runs-on: ubuntu-latest
-    needs: [create-pr-to-update]
-    steps:
-      - name: Report
-        uses: appleboy/telegram-action@master
-        with:
-          to: ${{ secrets.TELEGRAM_TO }}
-          token: ${{ secrets.TELEGRAM_TOKEN }}
-          message: |
-            🚀 New Android release notes have been created, please check them out:
+  # alert:
+  #   runs-on: ubuntu-latest
+  #   needs: [create-pr-to-update]
+  #   steps:
+  #     - name: Report
+  #       uses: appleboy/telegram-action@master
+  #       with:
+  #         to: ${{ secrets.TELEGRAM_TO }}
+  #         token: ${{ secrets.TELEGRAM_TOKEN }}
+  #         message: |
+  #           🚀 New Android release notes have been created, please check them out:
 
-            PR:
-            ${{ needs.create-pr-to-update.outputs.pr-url }}
+  #           PR:
+  #           ${{ needs.create-pr-to-update.outputs.pr-url }}
