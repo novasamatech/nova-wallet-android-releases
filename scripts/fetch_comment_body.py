@@ -24,7 +24,7 @@ def fetch_comment_body_and_save(comment_link, version):
     lines = [
         line
         for line in lines
-        if not line.startswith(("Release notes:", "Release time:"))
+        if not line.startswith(("Release notes:", "Release time:", "Release severity:"))
     ]
     comment_body = "\n".join(lines)
 
