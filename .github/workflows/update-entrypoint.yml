@@ -11,7 +11,8 @@ jobs:
   create-pr-to-update:
     runs-on: ubuntu-latest
     outputs:
-      pr-url: ${{ steps.get_pr_url.outputs.pr-url }}
+      pr-url: ${{ steps.alert_data.outputs.pr-url }}
+      release-version: ${{ steps.alert_data.outputs.release-version }}
 
     steps:
       - uses: actions/checkout@v4
@@ -20,17 +21,18 @@ jobs:
         run: |
           echo "VERSION=${{ github.event.client_payload.version }}" >> $GITHUB_ENV
           echo "COMMENT_LINK=${{ github.event.client_payload.comment_link }}" >> $GITHUB_ENV
+          echo "PR-URL=${{ github.event.client_payload.pr-url }}" >> $GITHUB_ENV
           echo "TIME=${{ github.event.client_payload.time }}" >> $GITHUB_ENV
           echo "SEVERITY=${{ github.event.client_payload.severity }}" >> $GITHUB_ENV
       
+      - name: Install dependencies
+        run: make install
+      
       - name: Fetch comment body and save to file
-        run: |
-          COMMENT_BODY=$(curl --location '${{ env.COMMENT_LINK }}' | jq -r '.body' | sed 's/Release notes:\\r\\n//g')
-
-          echo "$COMMENT_BODY" > updates/changelogs/release/${{ env.VERSION }}.md
+        run: make fetch-comment COMMENT_LINK=${{ env.COMMENT_LINK }} VERSION=${{ env.VERSION }}
         
       - name: Update entrypoint_release
-        run: python scripts/version_updater.py ${{ env.VERSION }} ${{ env.TIME }} ${{ env.SEVERITY }}
+        run: make update-version VERSION=${{ env.VERSION }} TIME=${{ env.TIME }} SEVERITY=${{ env.SEVERITY }}
 
       - name: Make Pull Request
         id: pr
@@ -43,13 +45,16 @@ jobs:
           pr-reviewer: ${{ env.PR_REVIEWER }}
           branch-name: release-notes-${{ env.VERSION }}
           pr-title: 🚀 Release notes for ${{ env.VERSION }}
-          pr-body: This PR was generated automatically 🤖
+          pr-body: |
+            This PR was generated automatically 🤖
+            ${{ env.PR-URL }}
           pr-base: main
       
-      - name: Get the pull request URL
-        id: get_pr_url
+      - name: Save data for alert
+        id: alert_data
         run: |
-          echo "::set-output name=pr-url::$(cat pr_url.txt)"
+          echo "pr-url=$(cat pr_url.txt)" >> $GITHUB_OUTPUT
+          echo "release-version=${{ env.VERSION }}" >> $GITHUB_OUTPUT
 
   alert:
     runs-on: ubuntu-latest
@@ -61,7 +66,7 @@ jobs:
           to: ${{ secrets.TELEGRAM_TO }}
           token: ${{ secrets.TELEGRAM_TOKEN }}
           message: |
-            🚀 New Android release notes have been created, please check them out:
+            🚀 Release notes have been updated for release - ${{ needs.create-pr-to-update.outputs.release-version }}:
 
             PR:
             ${{ needs.create-pr-to-update.outputs.pr-url }}

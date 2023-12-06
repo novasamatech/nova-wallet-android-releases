@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "nova-wallet-android-releases"
+version = "0.1.0"
+description = "This repository contains release notes and versions mapping for in-app updates"
+authors = ["Novasama Technologies <support@novawallet.io>"]
+license = "Apache 2.0"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+requests = "^2.31.0"
+flake8 = "^6.1.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
