@@ -140,6 +140,11 @@
         "time": "2023-11-08T12:00:00Z"
     },
     {
+        "version": "7.4.0",
+        "severity": "Normal",
+        "time": "2023-11-22T12:00:00Z"
+    },
+    {
         "version": "7.5.0",
         "severity": "Major",
         "time": "2023-11-30T10:40:15Z"
