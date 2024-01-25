@@ -153,5 +153,10 @@
         "version": "7.6.0",
         "severity": "Normal",
         "time": "2023-12-18T13:26:50Z"
+    },
+    {
+        "version": "7.6.2",
+        "severity": "Major",
+        "time": "2023-12-28T07:46:37Z"
     }
 ]
