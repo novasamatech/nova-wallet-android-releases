@@ -155,6 +155,16 @@
         "time": "2023-12-18T13:26:50Z"
     },
     {
+        "version": "7.6.2",
+        "severity": "Major",
+        "time": "2023-12-28T07:46:37Z"
+    },
+    {
+        "version": "7.7.0",
+        "severity": "Major",
+        "time": "2024-01-16T11:12:33Z"
+    },
+    {
         "version": "7.7.1",
         "severity": "Critical",
         "time": "2024-01-18T07:51:16Z"
