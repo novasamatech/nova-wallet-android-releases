@@ -1,4 +1,4 @@
-# ⚠️ Nova Wallet Android releases moved to the [main repository](https://github.com/novasamatech/nova-wallet-android) in order to keep code base and releases as close as possible. That repository contains only technical details.
+# ⚠️ Nova Wallet Android releases moved to the [main repository](https://github.com/novasamatech/nova-wallet-android) in order to keep code base and releases as close as possible. This repository contains only technical details.
 
 # Releases of Nova Wallet Android
 
