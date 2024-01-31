@@ -183,5 +183,10 @@
         "version": "7.7.4",
         "severity": "Critical",
         "time": "2024-01-30T11:59:29Z"
+    },
+    {
+        "version": "7.7.5",
+        "severity": "Critical",
+        "time": "2024-01-31T16:24:52Z"
     }
 ]
