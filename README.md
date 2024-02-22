@@ -2,7 +2,10 @@
 
 # Releases of Nova Wallet Android
 
-Check "releases" section to find the most recent release
+We have moved Android released to the same repository with the Android source code for better management.
+Please find link below:
+https://github.com/novasamatech/nova-wallet-android/releases
+
 ## License
 Releases of Nova Wallet Android is available under the Apache 2.0 license. See the LICENSE file for more info.
 © Novasama Technologies GmbH 2023
