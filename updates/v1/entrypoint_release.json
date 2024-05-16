@@ -238,5 +238,10 @@
         "version": "7.11.0",
         "severity": "Normal",
         "time": "2024-04-05T14:24:47Z"
+    },
+    {
+        "version": "7.12.2",
+        "severity": "Normal",
+        "time": "2024-05-16T08:07:51Z"
     }
 ]
