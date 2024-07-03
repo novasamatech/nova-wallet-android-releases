@@ -243,5 +243,10 @@
         "version": "7.13.0",
         "severity": "Critical",
         "time": "2024-06-11T14:45:58Z"
+    },
+    {
+        "version": "8.1.0",
+        "severity": "Normal",
+        "time": "2024-07-03T15:17:13Z"
     }
 ]
