@@ -308,5 +308,10 @@
         "version": "8.7.2",
         "severity": "Normal",
         "time": "2024-10-15T13:49:56Z"
+    },
+    {
+        "version": "moonriver_staking",
+        "severity": "Critical",
+        "time": "2024-11-05T12:26:29Z"
     }
 ]
