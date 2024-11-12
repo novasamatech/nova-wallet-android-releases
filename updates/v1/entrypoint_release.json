@@ -309,6 +309,7 @@
         "severity": "Normal",
         "time": "2024-10-15T13:49:56Z"
     },
+    {
         "version": "8.7.3",
         "severity": "Critical",
         "time": "2024-11-05T12:26:29Z"
