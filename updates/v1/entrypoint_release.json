@@ -313,5 +313,9 @@
         "version": "9.0.0",
         "severity": "Major",
         "time": "2024-11-11T18:29:10Z"
+    },
+        "version": "moonriver_staking",
+        "severity": "Critical",
+        "time": "2024-11-05T12:26:29Z"
     }
 ]
