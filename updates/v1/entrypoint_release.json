@@ -326,7 +326,7 @@
     },
     {
         "version": "9.0.2",
-        "severity": "Normal",
+        "severity": "Critical",
         "time": "2024-11-20T010:22:37Z"
     }
 ]
