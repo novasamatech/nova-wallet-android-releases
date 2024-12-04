@@ -333,5 +333,10 @@
         "version": "9.1.0",
         "severity": "Major",
         "time": "2024-12-03T12:30:15Z"
+    },
+    {
+        "version": "9.1.1",
+        "severity": "Normal",
+        "time": "2024-12-04T14:14:54Z"
     }
 ]
