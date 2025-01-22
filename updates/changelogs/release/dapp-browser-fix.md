@@ -1,0 +1,1 @@
+- Fixed opening DApps in more staking options
