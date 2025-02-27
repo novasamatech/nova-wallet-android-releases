@@ -363,5 +363,10 @@
         "version": "9.3.2",
         "severity": "Normal",
         "time": "2025-02-26T14:04:00Z"
+    },
+    {
+        "version": "9.3.3",
+        "severity": "Normal",
+        "time": "2025-02-26T14:09:25Z"
     }
 ]
