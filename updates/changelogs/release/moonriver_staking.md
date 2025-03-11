@@ -1,1 +1,1 @@
-Fix display of Moonriver staking
+- Fix display of Moonriver staking

@@ -1,2 +1,0 @@
-
-Prepare for Mythos runtime upgrade
