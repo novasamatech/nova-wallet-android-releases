@@ -390,6 +390,16 @@
         "time": "2025-03-12T13:16:06Z"
     },
     {
+        "version": "9.5.2",
+        "severity": "Normal",
+        "time": "2025-03-14T13:25:35Z"
+    },
+    {
+        "version": "9.5.3",
+        "severity": "Normal",
+        "time": "2025-03-24T07:50:14Z"
+    },
+    {
         "version": "9.6.0",
         "severity": "Normal",
         "time": "2025-03-25T12:25:17Z"
