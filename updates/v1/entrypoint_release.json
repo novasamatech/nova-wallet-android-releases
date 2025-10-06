@@ -483,5 +483,10 @@
         "version": "10.3.2",
         "severity": "Normal",
         "time": "2025-09-24T16:54:04Z"
+    },
+    {
+        "version": "10.4.0",
+        "severity": "Critical",
+        "time": "2025-10-06T08:43:56Z"
     }
 ]
