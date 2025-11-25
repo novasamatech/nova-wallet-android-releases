@@ -513,5 +513,10 @@
         "version": "10.5.1",
         "severity": "Normal",
         "time": "2025-11-24T13:57:52Z"
+    },
+    {
+        "version": "10.5.2",
+        "severity": "Normal",
+        "time": "2025-11-24T20:45:23Z"
     }
 ]
