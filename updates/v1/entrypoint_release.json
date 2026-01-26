@@ -530,6 +530,11 @@
         "time": "2025-12-24T08:34:37Z"
     },
     {
+        "version": "10.7.1",
+        "severity": "Normal",
+        "time": "2026-01-12T12:12:16Z"
+    },
+    {
         "version": "10.7.2",
         "severity": "Normal",
         "time": "2026-01-26T08:34:26Z"
