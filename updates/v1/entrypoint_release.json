@@ -568,5 +568,10 @@
         "version": "11.0.0",
         "severity": "Major",
         "time": "2026-10-29T14:33:34Z"
+    },
+    {
+        "version": "11.1.0",
+        "severity": "Normal",
+        "time": "2026-11-03T09:39:30Z"
     }
 ]
